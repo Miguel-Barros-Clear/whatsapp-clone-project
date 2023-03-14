@@ -223,9 +223,36 @@ class WhatsAppController {
             (this.el.panelEmojis.hasClass('open')) ? this.el.panelEmojis.removeClass('open') : this.el.panelEmojis.addClass('open');
         })
 
-        this.el.panelEmojis.querySelectorAll('.emojik').forEach((emoji) => {
-            emoji.on('click', (e) => {
-                console.log(emoji.dataset.unicode);
+        this.el.panelEmojis.querySelectorAll('.emojik').forEach(emoji => {
+            emoji.on('click', e => {
+                let img = this.el.imgEmojiDefault.cloneNode();
+                
+                img.style.cssText = emoji.style.cssText;
+                img.dataset.unicode = emoji.dataset.unicode;
+                img.alt = emoji.dataset.unicode;
+
+                emoji.classList.forEach(name => {
+                    img.classList.add(name);
+                })
+
+                let cursor = window.getSelection();
+                
+                if(!cursor.focusNode || !cursor.focusNode.id == 'input-text'){
+                    this.el.inputText.focus();
+                    cursor = window.getSelection();
+                }
+
+                let range = document.createRange();
+                let fragment = document.createDocumentFragment();
+
+                range = cursor.getRangeAt(0);
+
+                range.deleteContents();
+                fragment.appendChild(img)
+                range.insertNode(fragment)
+                range.setStartAfter(img);
+
+                this.el.inputText.dispatchEvent(new Event('keyup'));
             })
         })
     }
