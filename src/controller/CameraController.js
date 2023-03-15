@@ -17,7 +17,7 @@ export class CameraController {
     }
 
     stop() {
-        this.stream.getTracks().forEach((track) => {
+        this._stream.getTracks().forEach((track) => {
             track.stop();
         });
     }
