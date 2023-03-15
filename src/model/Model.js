@@ -11,7 +11,7 @@ export class Model extends ClassEvent {
         this.trigger('datachange', this.toJSON())
     }
 
-    toJSON(json) {
+    toJSON() {
         return this._data;
     }
 }
