@@ -26,11 +26,28 @@ export class Firebase {
         this._initialized = true;
     }
 
-    static db(){
+    static db() {
         return firebase.firestore();
     }
 
-    static hd(){
+    static hd() {
         return firebase.storage();
+    }
+
+    initAuth() {
+        return new Promise((s, f) => {
+            let provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider).then((res) => {
+                let token = res.credential.accessToken;
+                let user = res.user;
+                s({
+                    user,
+                    token
+                });
+            }).catch((err) => {
+                f(err)
+            })
+        })
     }
 }

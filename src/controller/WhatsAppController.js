@@ -6,10 +6,22 @@ import { Firebase } from "../util/firebase";
 
 export class WhatsAppController {
     constructor() {
+        this._firebase = new Firebase();
+        this.initAuth();
         this.elementsPrototype();
         this.loadElements();
         this.initEvents();
-        this._firebase = new Firebase();
+    }
+
+    initAuth() {
+        this._firebase.initAuth().then((res) => {
+            this._user = res.user;
+            this.el.appContent.css({
+                display: 'flex'
+            });
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 
     loadElements() {
@@ -282,7 +294,7 @@ export class WhatsAppController {
             })
 
             this._microphoneController.on('recordTimer', (timer) => {
-            this.el.recordMicrophoneTimer.innerHTML = Format.toTime(timer);
+                this.el.recordMicrophoneTimer.innerHTML = Format.toTime(timer);
             });
         })
 
