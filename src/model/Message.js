@@ -315,7 +315,7 @@ export class Message extends Model {
             let uploadTask = Firebase.hd().ref(from).child(`${Date.now()}_${file.name}`).put(file);
 
             uploadTask.on('state_changed', (e) => {
-                console.log('Upload', e);
+                // in loading
             }, (err) => {
                 console.log(err);
             }, () => {
