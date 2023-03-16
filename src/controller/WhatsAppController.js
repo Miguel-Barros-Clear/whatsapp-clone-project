@@ -114,11 +114,27 @@ export class WhatsAppController {
             </div>
                 `
 
-                if(contact.photo){
+                if (contact.photo) {
                     let img = div.querySelector('.photo');
                     img.src = contact.photo;
                     img.show();
                 }
+
+                div.on('click', (e) => {
+                    this.el.activeName.innerHTML = contact.name;
+                    this.el.activeStatus.innerHTML = contact.status;
+
+                    if (contact.photo) {
+                        let img = div.querySelector('.photo');
+                        img.src = contact.photo;
+                        img.show();
+                    }
+
+                    this.el.home.hide();
+                    this.el.main.css({
+                        display: 'flex'
+                    });
+                })
 
                 this.el.contactsMessagesList.appendChild(div);
             })
