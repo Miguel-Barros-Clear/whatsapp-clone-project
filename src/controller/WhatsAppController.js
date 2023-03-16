@@ -5,6 +5,7 @@ import { DocumentPreviewController } from "./DocumentPreviewController";
 import { Firebase } from "../util/firebase";
 import { User } from "../model/User";
 import { Chat } from "../model/Chat";
+import { Message } from "../model/Message";
 
 export class WhatsAppController {
     constructor() {
@@ -55,8 +56,6 @@ export class WhatsAppController {
     }
 
     initContacts() {
-
-
         this._user.on('contactschange', docs => {
             this.el.contactsMessagesList.innerHTML = "";
             docs.forEach((doc) => {
@@ -122,25 +121,31 @@ export class WhatsAppController {
                 }
 
                 div.on('click', (e) => {
-                    this.el.activeName.innerHTML = contact.name;
-                    this.el.activeStatus.innerHTML = contact.status;
-
-                    if (contact.photo) {
-                        let img = div.querySelector('.photo');
-                        img.src = contact.photo;
-                        img.show();
-                    }
-
-                    this.el.home.hide();
-                    this.el.main.css({
-                        display: 'flex'
-                    });
+                    this.setActiveChat(contact);
                 })
 
                 this.el.contactsMessagesList.appendChild(div);
             })
         })
         this._user.getContacts();
+    }
+
+    setActiveChat(contact) {
+        this._contactActive = contact;
+
+        this.el.activeName.innerHTML = contact.name;
+        this.el.activeStatus.innerHTML = contact.status;
+
+        if (contact.photo) {
+            let img = this.el.activePhoto;
+            img.src = contact.photo;
+            img.show();
+        }
+
+        this.el.home.hide();
+        this.el.main.css({
+            display: 'flex'
+        });
     }
 
     loadElements() {
@@ -474,7 +479,9 @@ export class WhatsAppController {
         })
 
         this.el.btnSend.on('click', (e) => {
-            console.log(this.el.inputText.innerHTML);
+            Message.send(this._contactActive.chatId, this._user.email, 'text', this.el.inputText.innerHTML);
+            this.el.inputText.innerHTML = '';
+            this.el.panelEmojis.removeClass('open');
         })
 
         this.el.btnEmojis.on('click', (e) => {
